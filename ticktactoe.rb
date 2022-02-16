@@ -11,10 +11,9 @@ class TickTacToe
     def gameplay
         player = @player1
         spaces = [1,2,3,4,5,6,7,8,9]
-        game_over = false
         round = 1
 
-        while !game_over
+        loop do
             puts ""
             puts "Round Number: #{round}"
             print_board
@@ -25,19 +24,8 @@ class TickTacToe
                 spaces.delete(position)
                 @board[position-1] = player.symbol
 
-                if win_check(player)
-                    game_over = true
-                    break
-                end
-
-                if spaces.empty?
-                    puts ""
-                    puts "======================"
-                    puts ""
-                    puts "It's a tie, we all lose together!"
-                    print_board
-                    game_over = true
-                end
+                break if win_check(player)
+                break if tie_check(spaces)
 
                 round += 1
                 player == @player1 ? player = @player2 : player = @player1
@@ -59,6 +47,18 @@ class TickTacToe
                 print_board
                 return true
             end
+        end
+        return false
+    end
+
+    def tie_check(spaces)
+        if spaces.empty?
+            puts ""
+            puts "======================"
+            puts ""
+            puts "It's a tie, we all lose together!"
+            print_board
+            return true
         end
         return false
     end
