@@ -1,5 +1,5 @@
 class TickTacToe
-    LINES = [0,1,2,3,4,5, 6,7,8, 0,3,6, 1,4,7, 2,5,8, 0,4,8, 2,4,6]
+    LINES = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]]
 
     def initialize(player1, player2)
         @board = [1,2,3,4,5,6,7,8,9]
@@ -26,13 +26,19 @@ class TickTacToe
                 @board[position-1] = player.symbol
 
                 if win_check(player)
+                    game_over = true
+                    break
+                end
+
+                if spaces.empty?
                     puts ""
                     puts "======================"
                     puts ""
-                    puts "#{player.name} wins!"
+                    puts "It's a tie, we all lose together!"
                     print_board
                     game_over = true
                 end
+
                 round += 1
                 player == @player1 ? player = @player2 : player = @player1
             end
@@ -40,12 +46,19 @@ class TickTacToe
     end
 
     def win_check(player)
-        arr = []
-        LINES.each do |position|
-            arr << @board[position]
-        end
-        if arr.join =~ /#{player.symbol}{3}/
-            return true
+        LINES.each do |set|
+            arr = []
+            set.each do |position|
+                arr << @board[position]
+            end
+            if arr.join =~ /#{player.symbol}{3}/
+                puts ""
+                puts "======================"
+                puts ""
+                puts "#{player.name} wins!"
+                print_board
+                return true
+            end
         end
         return false
     end
@@ -88,7 +101,7 @@ class Player
             puts "You cannot select #{@@picked_symbol}" if @@picked_symbol != ""
             symbol = gets.chomp.upcase
             if symbol == @@picked_symbol || !/^[a-zA-Z]{1}$/.match(symbol)
-                print "Try again - "
+                puts "Try again!"
             else
                 @@picked_symbol = symbol
                 symbol_set = true
